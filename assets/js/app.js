@@ -26,3 +26,40 @@ $searchToggler.addEventListener("click", function () {
     this.setAttribute("aria-expanded", isExpanded);
     $searchField.focus();
 });
+
+
+// TAB NAVIGATION
+
+const $tabBtns = document.querySelectorAll("[data-tab-btn]");
+const $tabPanels = document.querySelectorAll("[data-tab-panel]");
+
+let [$lastActiveTabBtn] = $tabBtns;
+let [$lastActiveTabPanel] = $tabPanels;
+
+addEventOnElements($tabBtns, "click", function () {
+
+    $lastActiveTabBtn.setAttribute("aria-selected", "false");
+    $lastActiveTabPanel.setAttribute("hidden", "");
+
+    this.setAttribute("aria-selected", "true");
+    const $currentTabPanel = document.querySelector(`#${this.getAttribute("aria-controls")}`);
+    $currentTabPanel.removeAttribute("hidden");
+
+    $lastActiveTabBtn = this;
+    $lastActiveTabPanel = $currentTabPanel;
+});
+
+
+// KEYBOARD ACCESSIBILITY FOR TAB BUTTONS
+
+addEventOnElements($tabBtns, "keydown", function (e) {
+    if (e.key === "ArrowRight" && $nextElement) {
+        this.setAttribute("tabindex", "-1");
+        $nextElement.setAttribute("tabindex", "0");
+        $nextElement.focus();
+    } else if (e.key === "ArrowLeft" && $previousElement) {
+        this.setAttribute("tabindex", "-1");
+        $previousElement.setAttribute("tabindex", "0");
+        $previousElement.focus();
+    }
+});
